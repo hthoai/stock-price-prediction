@@ -74,7 +74,7 @@ model using different representations of the same data*. PLoS ONE 14(2):
 e0212320, 2019.\
 <https://doi.org/10.1371/journal.pone.0212320>
 
-Hao Y, Gao Q. *Predicting the Trend of Stock Market Index Using the
+<span>4.</span> Hao Y, Gao Q. *Predicting the Trend of Stock Market Index Using the
 Hybrid Neural Network Based on Multiple Time Scale Machine Learning*.
 MDPI Appl. Sci. 2020, 10(11), 3961.\
 <https://doi.org/10.3390/app10113961>
