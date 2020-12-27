@@ -51,11 +51,11 @@ class StockChartDataModule(pl.LightningDataModule):
         transform=transforms.Compose([transforms.ToTensor(), 
                                       transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-        self.train = StockChartDataset(root_dir + 'data/paper_charts/train/',
+        self.train = StockChartDataset(root_dir + 'data/charts/train/',
                                        transforms=transform)
-        self.val = StockChartDataset(root_dir + 'data/paper_charts/val/',
+        self.val = StockChartDataset(root_dir + 'data/charts/val/',
                                      transforms=transform)
-        self.test = StockChartDataset(root_dir + 'data/paper_charts/test/',
+        self.test = StockChartDataset(root_dir + 'data/charts/test/',
                                       transforms=transform)
         
     def train_dataloader(self):
@@ -119,7 +119,7 @@ class StockChartCNN(pl.LightningModule):
             num_channels=256, output_channels=512,
             stride1=2, stride2=1, stride3=1)
         self.average_pool = nn.AvgPool2d(kernel_size=7, padding=0)
-        self.layer_norm = nn.LayerNorm([512, 1, 1])
+        # self.layer_norm = nn.LayerNorm([512, 1, 1])
         self.fc1 = nn.Linear(in_features=512, out_features=500)
         self.dropout = nn.Dropout(0.5)
         self.fc2 = nn.Linear(in_features=500, out_features=100)
@@ -135,7 +135,7 @@ class StockChartCNN(pl.LightningModule):
         X = self.res_conv2(X)
         X = self.res_conv3(X)
         X = self.average_pool(X)
-        X = self.layer_norm(X)
+        # X = self.layer_norm(X)
         X = X.view(X.size(0), -1)
         X = self.fc1(X)
         X = self.dropout(X)
@@ -167,14 +167,18 @@ class StockChartCNN(pl.LightningModule):
     def configure_optimizers(self):
         optimizer = torch.optim.SGD(self.parameters(), lr=0.01, momentum=0.9)
         return optimizer
+        # scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        #     optimizer, patience=2, verbose=True, min_lr=1e-5
+        # )
+        # return {'optimizer': optimizer, 'lr_scheduler': scheduler, 'monitor': 'val_loss'}
 
 
 # TRAINER
 # saves a file like: my/path/sample-mnist-epoch=02-val_loss=0.32.ckpt
 checkpoint_callback = pl.callbacks.ModelCheckpoint(
     monitor='val_loss',
-    dirpath=root_dir + 'model/',
-    filename='cnn-1226-{epoch:02d}-{val_loss:.9f}',
+    dirpath=root_dir + 'model/cnn_1227_0',
+    filename='dji-non-norm-{epoch:02d}-{val_loss:.9f}',
     save_top_k=5,
     mode='min',
 )
